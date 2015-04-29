@@ -141,6 +141,8 @@ public abstract class Character
    
    public double getDefChance(){return this.dchance;}
    
+   public abstract void defend();
+   
    public void setName(String n)
    {
       if(n != null && !n.equals("") && !n.equals(" ") && !n.equals("\n") && !n.equals("\r") && !n.equals("\0"))
