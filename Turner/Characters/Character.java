@@ -12,6 +12,7 @@ public abstract class Character
    private String name;
    private String type;
    private static Inventory items;
+   private int gold;
    
    private int unarmedMIN;
    private int unarmedMAX;
@@ -26,7 +27,39 @@ public abstract class Character
    private static final double MAX_CHC = 1.0;
    private static final double MIN_CHC = 0.05;
    
+   private static String SUPER_TYPE;
    
+   public void setGold(int g)
+      {
+         if(g < 0)
+            this.gold = 0;
+         this.gold = g;
+         if(this.gold < 0)
+            this.gold = this.gold * -1;
+      }
+      
+      public int getGold(){return this.gold;}
+      
+   protected void setSuper(String s)
+   {
+      if(s == null || s.compareTo("") == 0 || s.compareTo("\n") == 0 || s.compareTo("\r") == 0 || s.compareTo(" ") == 0)
+      {
+         System.err.println("Character cannot have null or empty super type!");
+         return;
+      }
+      else if(SUPER_TYPE != null)
+      {
+         System.err.println("Character super type already defined!");
+         return;   
+      }
+      else
+         this.SUPER_TYPE = s.toUpperCase();     
+   }
+   
+   public String getSuper()
+   {
+      return this.SUPER_TYPE;
+   }
    public Character()
    {
       this.hp = DEFAULT_HP;
@@ -141,7 +174,7 @@ public abstract class Character
    
    public double getDefChance(){return this.dchance;}
    
-   public abstract void defend();
+   public abstract boolean defend();
    
    public void setName(String n)
    {
@@ -176,5 +209,22 @@ public abstract class Character
    }
    
    public abstract void displayInfo();
-   public abstract void getInfo(Character c);
+   
+   public int getUmax(){return this.unarmedMAX;}
+   public int getUmin(){return this.unarmedMIN;}
+   
+   public void takeItems(Character c)
+   {
+      for(ArrayList<Item> a : c.getInventory().getItems())
+      {
+         for(Item i : a)
+            this.getInventory().addItem(i);
+      }
+   }
+   
+   public void takeGold(Character c)
+   {
+      this.setGold(c.getGold() + this.getGold());
+      c.setGold(0);
+   }
 }

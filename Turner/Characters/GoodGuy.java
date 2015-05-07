@@ -7,6 +7,9 @@ public abstract class GoodGuy extends Character
       private int toughness;
       private int atkspd;
       
+      private Ability abl;
+      private SpecialAbility sabl;
+      
       private static final int DEFAULT_AP = 50;
       private static final double DEFAULT_HIT = .50;
       private static final double DEFAULT_CRIT = .10;
@@ -23,6 +26,7 @@ public abstract class GoodGuy extends Character
       private static final int MIN_ATK_SPD = 1;
       private static final int MAX_ATK_SPD = 8;
       
+      
       public GoodGuy()
       {
          super();
@@ -33,7 +37,7 @@ public abstract class GoodGuy extends Character
          this.toughness = DEFAULT_TUFF;
       }
       
-      public GoodGuy(int h, double dc, int a, double hc, double cc, int s, int hs, int umin, int umax, String n, String t, int as)
+      public GoodGuy(int h, double dc, int a, double hc, double cc, int s, int umin, int umax, String n, String t, int as)
       {
          super(h, dc, umin, umax, n, t);
          this.ap = a;
@@ -43,7 +47,7 @@ public abstract class GoodGuy extends Character
          this.toughness = s;
       }
       
-      public GoodGuy(String n, String t, int h, int a, double hc, double dc, double cc, int s, int hs, int umin, int umax)
+      public GoodGuy(String n, String t, int h, int a, double hc, double dc, double cc, int s, int umin, int umax, int as)
       {
          super(n, t, h, dc, umin, umax);
             
@@ -56,6 +60,8 @@ public abstract class GoodGuy extends Character
          }
          else
             this.ap = a;
+         
+         this.atkspd = as;
             
          this.hchance = (hc - MIN_CHC < 0.0 || MAX_CHC - hc < 0.0) ? (hc -  MIN_CHC < 0.0 ? MIN_CHC : DEFAULT_HIT) : hc;
          this.cchance = (cc - MIN_CHC < 0.0 || MAX_CHC - cc < 0.0) ? (cc -  MIN_CHC < 0.0 ? MIN_CHC : DEFAULT_CRIT) : cc;
@@ -114,10 +120,31 @@ public abstract class GoodGuy extends Character
    }
    
    public boolean isArmed(){return this.weapon == null;}
-   public abstract void displayInfo();
-   public abstract void getInfo(Character c);
-   public abstract void defend();
+   public void displayInfo()
+   {
+      System.out.println("NAME: " + this.getName());
+      System.out.println("HEALTH: " + this.getHP());
+      if(this.isArmed())
+         System.out.println("WEAPON: " + this.getWeapon().getType());
+      else
+         System.out.println("UNARMED");
+   }
+   public abstract boolean defend();
    public abstract void displayStats();
    
    public abstract void attack(Character opponent);
+   
+   public void setAbility(Ability a)
+   {
+      if(a != null)
+         this.abl = a;
+   }
+   public void setSpecial(SpecialAbility s)
+   {
+      if(s != null)
+         this.sabl = s;
+   }
+   
+   public Ability getAbility(){return this.abl;}
+   public SpecialAbility getSpecial(){return this.sabl;}
 }
