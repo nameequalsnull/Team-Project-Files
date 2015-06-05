@@ -32,7 +32,7 @@ public abstract class UseableItem implements Item
       this.condition = calcCondition(this.cp);
    }
    
-   public int getValue(){return this.trade_val;}
+   public int value(){return this.trade_val;}
    
    private static double calcModifier(int c)
    {
@@ -94,6 +94,12 @@ public abstract class UseableItem implements Item
       return this.type;
    }
    
+   public String getName(){return this.name;}
+   
+   public String getCondition(){return this.condition;}
+   
+   public int getConditionNumeric(){return this.cp;}
+   
    public void changeCondition(int c)
    {
       if(c < 0 || c > 100)
@@ -109,6 +115,5 @@ public abstract class UseableItem implements Item
       this.trade_val = (int)(this.trade_val * this.tval_modifier);
       this.condition = calcCondition(this.cp); 
    }
-   public abstract void use();
-   public abstract int compareTo(UseableItem i);
+   public abstract void use(Character c);
 }

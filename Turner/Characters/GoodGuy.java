@@ -1,14 +1,11 @@
 public abstract class GoodGuy extends Character
 {
       private int ap;
-      private Item weapon;
+      private Weapon weapon;
       private double hchance;
       private double cchance;
       private int toughness;
       private int atkspd;
-      
-      private Ability abl;
-      private SpecialAbility sabl;
       
       private static final int DEFAULT_AP = 50;
       private static final double DEFAULT_HIT = .50;
@@ -112,8 +109,8 @@ public abstract class GoodGuy extends Character
    public double getCritChance(){return this.cchance;}
    public int getToughness(){return this.toughness;}
    
-   public Item getWeapon(){return this.weapon;}
-   public void setWeapon(Item w)
+   public Weapon getWeapon(){return this.weapon;}
+   public void setWeapon(Weapon w)
    {
       if(w != null)
          this.weapon = w;   
@@ -134,17 +131,5 @@ public abstract class GoodGuy extends Character
    
    public abstract void attack(Character opponent);
    
-   public void setAbility(Ability a)
-   {
-      if(a != null)
-         this.abl = a;
-   }
-   public void setSpecial(SpecialAbility s)
-   {
-      if(s != null)
-         this.sabl = s;
-   }
    
-   public Ability getAbility(){return this.abl;}
-   public SpecialAbility getSpecial(){return this.sabl;}
 }

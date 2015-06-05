@@ -17,29 +17,29 @@ public class PlayerInventory implements Inventory
    {
       System.out.println("WEAPONS:");
       for(Item i : weapons)
-         System.out.println(i.getName());
+         System.out.println(i.getName() + "\nValue: " + i.value() + " gold.");
    }
    public ArrayList getArmor(){return this.armor;}
    public void listArmor()
    {
       System.out.println("ARMOR:");
       for(Item i : armor)
-         System.out.println(i.getName());
+         System.out.println(i.getName() + "\nValue: " + i.value() + " gold.");
    }
    public ArrayList getGeneral(){return this.general;}
    public void listGeneral()
    {
       System.out.println("OTHER ITEMS:");
       for(Item i : general)
-         System.out.println(i.getName()); 
+         System.out.println(i.getName() + "\nValue: " + i.value() + " gold."); 
    }
    
    public void addItem(Item i)
    {
       if(i.getType().equals("WEAPON"))
-         weapons.add(i);
+         weapons.add((Weapon)i);
       else if(i.getType().equals("ARMOR"))
-         armor.add(i);
+         armor.add((Armor)i);
       else
          general.add(i);
    }

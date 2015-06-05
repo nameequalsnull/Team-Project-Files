@@ -4,6 +4,8 @@ public abstract class Player extends GoodGuy
    private ArrayList<Character> party;
    private boolean armored;
    private int armorlvl;
+   private Ability abl;
+   private SpecialAbility sabl;
    
    public Player()
    {
@@ -25,31 +27,36 @@ public abstract class Player extends GoodGuy
       this.setSuper("PLAYER");
    }
    
-   public void addToParty(Character c)
+   public void setAbility(Ability a)
    {
-      if(c.getSuper().equals("PARTY"))
-      {
-         if(!party.contains(c))
-         {
-            c = (Party)c;
-            party.add(c);
-            applyEffects(c);
-         }
-         else
-            System.err.println("Already in party.");
-      }
-      else
-         System.err.println("Can only add good guys to party!");
+      if(a != null)
+         this.abl = a;
+   }
+   public void setSpecial(SpecialAbility s)
+   {
+      if(s != null)
+         this.sabl = s;
    }
    
-   public int getArmorLvl()
+   public Ability getAbility(){return this.abl;}
+   public SpecialAbility getSpecial(){return this.sabl;}
+   
+   public void addToParty(Character c)
+   {
+      this.getCommunicator().playerAddParty(this, c);
+   }
+   
+   public int getArmorlvl()
    {
       return this.armorlvl;
    }
    
-   public void setArmorLvl(int h)
+   public boolean isArmored(){return this.armored;}
+   
+   public void setArmorlvl(int h)
    {
       this.armorlvl = (h < 0 || h > 150) ? (h < 0 ? 0 : (h > 150 ? 150 : h)) : h;
+      this.armored = (this.armorlvl == 0) ? false : true;
    }
    
    public void removeFromParty(Character c)
@@ -88,24 +95,12 @@ public abstract class Player extends GoodGuy
    
    private void applyEffects(Character c)
    {
-      if(c.getSuper().equals("PARTY"))
-      {
-         c = (Party)c;
-         c.giveEffects(this);
-      }
-      else
-         System.err.println("Only party members give bonuses to player!");
+      this.getCommunicator().applyNPCEffects(this, c);
    }
    
    private void removeEffects(Character c)
    {
-      if(c.getSuper().equals("PARTY"))
-      {
-         c = (Party)c;
-         c.removeEffects(this);
-      }
-      else
-         System.err.println("Only party memmbers can remove bonuses from player!");
+      this.getCommunicator().removeNPCEffects(this, c);
    }
    
    public boolean defend()
@@ -129,8 +124,7 @@ public abstract class Player extends GoodGuy
    {
       for(Character temp : party)
       {
-         if(temp.getSuper().equals("PARTY"))
-            temp.attack(c);
+            ((Party)temp).attack(c);
       }
    }
    
@@ -138,9 +132,9 @@ public abstract class Player extends GoodGuy
    {
       for(Character c :  party)
       {
-         if(c.getName().compareTo(name) == 0 && c.getSuper().equals("PARTY"))
+         if(c.getName().compareTo(name) == 0)
          {
-            c.attack(temp);
+            ((Party)c).attack(temp);
             break;     
          }
       }
@@ -148,23 +142,40 @@ public abstract class Player extends GoodGuy
    
    public void getInfo(Character c)
    {
-      System.out.println("NAME: " + c.getName());
-      System.out.println("HEALTH: " + c.getHP());
-      if(c.getSuper().equals("PARTY") || c.getSuper().equals("BADGUY"))
-      {
-         c = c.getSuper().equals("PARTY") ? (Party)c : (BadGuy)c;
-         System.out.println("WEAPON: " + (c.getSuper().equals("PARTY") ? c.getWeapon().getType() : c.getWeapon()));
-      }
-      else
-         System.out.println("UNARMED");
+      c.displayInfo();
    }
    
    public void currentStats()
    {
-      System.out.println("HP: " + this.getHp());
-      System.out.println("ARMOR: " + this.getArmor());
+      System.out.println("HP: " + this.getHP());
+      if(this.armored)
+         System.out.println("ARMOR: " + this.armorlvl);
+      else
+         System.out.println("UNARMORED");
+      System.out.println("GOLD: " + this.getGold());
+      this.getInventory().listInventory();
    }
    
-   public abstract void availableActionsEncounter(Scanner kb, Character encounter);
-   public abstract void availableActionsNormal(Scanner kb);
+   public void attack(Character c)
+   {
+      if(this.confirmed(this.getHitChance()))
+      {
+         this.getCommunicator().playerAttack(this, this.isArmed(), c);
+         System.out.println(this.getName() + " landed a successful blow to " + c.getName());
+         if(c.isDead())
+         {
+            System.out.println(this.getName() + " brutally slaughtered " + c.getName() + " using a " + (this.isArmed() ? this.getWeapon().getName() : " their BEAR hands."));
+            if(c.hasItems())
+               this.takeItems(c);
+            this.takeGold(c);
+         }
+         else
+            System.out.println(c.getName() + " is still standing!");   
+      }
+      else
+         System.out.println(this.getName() + " was unable to land a blow on " + c.getName());   
+   }
+   
+   //public abstract void availableActionsEncounter(Scanner kb, Character encounter);
+   //public abstract void availableActionsNormal(Scanner kb);
 }

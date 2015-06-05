@@ -13,6 +13,7 @@ public abstract class Character
    private String type;
    private static Inventory items;
    private int gold;
+   private Communicator coms;
    
    private int unarmedMIN;
    private int unarmedMAX;
@@ -29,7 +30,7 @@ public abstract class Character
    
    private static String SUPER_TYPE;
    
-   public void setGold(int g)
+   protected void setGold(int g)
       {
          if(g < 0)
             this.gold = 0;
@@ -39,15 +40,23 @@ public abstract class Character
       }
       
       public int getGold(){return this.gold;}
+   
+   public void setCommunicator(Communicator c)
+   {
+      this.coms = c == null ? new NullCommunicator() : c;
+   }
+   
+   public Communicator getCommunicator(){return this.coms;}
       
    protected void setSuper(String s)
    {
       if(s == null || s.compareTo("") == 0 || s.compareTo("\n") == 0 || s.compareTo("\r") == 0 || s.compareTo(" ") == 0)
       {
          System.err.println("Character cannot have null or empty super type!");
+         this.SUPER_TYPE = "CHARACTER";
          return;
       }
-      else if(SUPER_TYPE != null)
+      else if(SUPER_TYPE != null && !SUPER_TYPE.equals("CHARACTER"))
       {
          System.err.println("Character super type already defined!");
          return;   
@@ -68,6 +77,7 @@ public abstract class Character
       this.unarmedMAX = 5;
       this.name = "Default Character";
       this.type = "Character";
+      this.SUPER_TYPE = this.type.toUpperCase();
    }
    
    /*

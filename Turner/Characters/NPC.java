@@ -44,9 +44,9 @@ public abstract class NPC extends Character
       int ohp = c.getHP();
       if(this.confirmed(this.getDefChance()))
       {
-         dam = rng.nextInt(this.getUmax() - this.getUmin()) + this.getUmin() + 1;
-         c.setHP(ohp - dam);
-         System.out.println(this.getName() + " landed a hit on " + c.getName() + " for " + dam);
+         dam = rng.nextInt(this.getUmax() - this.getUmin()) + this.getUmin();
+         this.getCommunicator().applyDamage(c, dam);
+         System.out.println(this.getName() + " landed a blow on " + c.getName());
          if(!c.isDead())
          {
             System.out.println(c.getName() + " is still standing! That bastard!");
@@ -55,13 +55,13 @@ public abstract class NPC extends Character
          {
             System.out.println(this.getName() + " punched " + c.getName() + " to death!");
             if(c.hasItems())
-               takeItems(c);
-            takeGold(c);
+               this.takeItems(c);
+            this.takeGold(c);
          }
       }
       else
          System.out.println(this.getName() + " failed to land a successful blow on " + c.getName());   
    }
    
-   public abstract void behavior(Character c);
+   //public abstract void behavior(Character c);
 }

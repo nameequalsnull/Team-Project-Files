@@ -42,7 +42,7 @@ public class NPCInventory implements Inventory
    public void listInventory()
    {
       for(Item i : inventory)
-         System.out.println(i.getName());
+         System.out.println(i.getName() + "\nValue: " + i.value() + " gold.");
    }
    
    public ArrayList getWeapons()
